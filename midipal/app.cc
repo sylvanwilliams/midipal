@@ -63,7 +63,7 @@ namespace midipal {
 const prog_uint8_t midi_clock_tick_per_step[17] PROGMEM = {
   192, 144, 96, 72, 64, 48, 36, 32, 24, 16, 12, 8, 6, 4, 3, 2, 1
 };
-  
+
 using namespace avrlib;
 
 Serial<MidiPort, 31250, DISABLED, POLLED> midi_out;
@@ -85,17 +85,18 @@ const AppInfo* registry[] = {
 
 const AppInfo* registry[] = {
   &apps::AppSelector::app_info_,
-  
+
   &apps::Monitor::app_info_,
+
   &apps::BpmMeter::app_info_,
-  
+
   &apps::Filter::app_info_,
   &apps::Splitter::app_info_,
   &apps::Dispatcher::app_info_,
   &apps::Combiner::app_info_,
-
   &apps::ClockDivider::app_info_,
   &apps::SyncLatch::app_info_,
+
 #ifdef USE_HD_CLOCK
   &apps::ClockSourceHD::app_info_,
 #else
@@ -108,8 +109,15 @@ const AppInfo* registry[] = {
   &apps::Randomizer::app_info_,
   &apps::ChordMemory::app_info_,
   &apps::Arpeggiator::app_info_,
+
+#ifdef USE_DELAY
   &apps::Delay::app_info_,
+#endif
+
+#ifdef USE_SCALE_PROC
   &apps::ScaleProcessor::app_info_,
+#endif
+
 #ifdef USE_SH_SEQUENCER
   &apps::ShSequencer::app_info_,
 #else
@@ -118,7 +126,7 @@ const AppInfo* registry[] = {
   &apps::Lfo::app_info_,
 
   &apps::Tanpura::app_info_,
-  
+
   &apps::GenericFilter::app_info_,
   &apps::Settings::app_info_
 };

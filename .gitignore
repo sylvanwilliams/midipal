@@ -30,3 +30,6 @@
 
 # build artifacts
 /build
+
+# Other
+*.size

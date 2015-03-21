@@ -21,7 +21,8 @@ bake_all: build/midipal/midipal.hex
 			-U lfuse:w:0x$(LFUSE):m
 		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -B 1 \
 			-U eeprom:w:midipal/data/midipal_eeprom_golden.hex:i \
-			-U flash:w:build/midipal/midipal.hex:i
+			-U flash:w:build/midipal/midipal.hex:i \
+			-U flash:w:build/muboot/muboot.hex:i
 		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ISP_OPTS) -B 1 \
 			-U lock:w:0x$(LOCK):m
 
