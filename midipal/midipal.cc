@@ -45,23 +45,23 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK) {
 
   if (midi_io.readable()) {
     uint8_t byte = midi_io.ImmediateRead();
-    if (byte != 0xfe || !apps::Settings::filter_active_sensing()) {
+    if ((byte != 0xfe || !apps::Settings::filter_active_sensing()) && (byte != 0x7b)) {
       LedIn::High();
       midi_parser.PushByte(byte);
     }
   }
-  
+
   // 4kHz
   if (MidiHandler::OutputBuffer::readable() && midi_io.writable()) {
     LedOut::High();
     midi_io.Overwrite(MidiHandler::OutputBuffer::ImmediateRead());
   }
-  
+
   while (num_clock_ticks) {
     --num_clock_ticks;
     app.OnClock(CLOCK_MODE_INTERNAL);
   }
-  
+
   sub_clock = (sub_clock + 1) & 3;
   if ((sub_clock & 1) == 0) {
     // 2kHz
@@ -88,17 +88,17 @@ ISR(TIMER1_COMPA_vect) {
 void Init() {
   sei();
   UCSR0B = 0;
-  
+
   LedOut::set_mode(DIGITAL_OUTPUT);
   LedIn::set_mode(DIGITAL_OUTPUT);
-  
+
   note_stack.Init();
   event_scheduler.Init();
-  
+
   // Boot the settings app.
   app.Launch(app.num_apps() - 1);
   app.LoadSettings();
-  
+
   // Boot the app selector app.
   app.Launch(0);
   app.Init();
@@ -111,16 +111,16 @@ void Init() {
     app.SetParameter(0, launch_app);
   }
   app.Launch(launch_app);
-  
+
   ui.Init();
   clock.Init();
-  
+
   // Configure the timers.
   Timer<1>::set_prescaler(1);
   Timer<1>::set_mode(0, _BV(WGM12), 3);
   PwmChannel1A::set_frequency(6510);
   Timer<1>::StartCompare();
-  
+
   Timer<2>::set_prescaler(2);
   Timer<2>::set_mode(TIMER_PWM_PHASE_CORRECT);
   Timer<2>::Start();
